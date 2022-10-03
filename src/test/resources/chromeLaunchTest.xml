@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd"[
+        <!ENTITY headlessMode "true">]>
+<suite name="ChromeQaseTests" parallel="classes" thread-count="3">
+    <listeners>
+        <listener class-name="tests.base.AnnotationTransformer"/>
+        <listener class-name="tests.base.TestListener"/>
+    </listeners>
+    <test name="Chrome: tests">
+        <classes>
+            <class name="tests.ProjectPageTest"/>
+            <class name="tests.LoginPageTest"/>
+            <class name="tests.NewProjectPageTest"/>
+            <class name="tests.CreatedProjectPageTest"/>
+            <parameter name="browserType" value="chrome"/>
+            <parameter name="headlessMode" value="&headlessMode;"/>
+        </classes>
+    </test>
+</suite>
