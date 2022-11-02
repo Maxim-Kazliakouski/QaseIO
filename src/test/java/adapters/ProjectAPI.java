@@ -7,7 +7,6 @@ import dto.TestCase;
 import io.restassured.RestAssured;
 import io.restassured.response.Response;
 import io.restassured.response.ValidatableResponse;
-import lombok.Data;
 import tests.api.Specifications;
 import tests.api.moduls.TestCase.Root;
 import utils.PropertyReader;
@@ -19,7 +18,6 @@ import java.util.Map;
 import static io.restassured.RestAssured.given;
 import static java.lang.String.format;
 
-@Data
 public class ProjectAPI {
     Gson gson;
     Specifications spec;
