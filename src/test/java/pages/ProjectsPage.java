@@ -37,18 +37,18 @@ public class ProjectsPage {
         if (whatChange.equals("Project name")) {
             new Input("Project name").clear();
             new Input("Project name").input(changeValue);
-            $(By.id("update")).click();
+            $x("//span[contains(text(),'Update settings')]//ancestor::button").click();
         } else if (whatChange.equals("Project code")) {
             new Input("Project Code").clear();
             new Input("Project Code").input(changeValue);
-            $(By.id("update")).click();
+            $x("//span[contains(text(),'Update settings')]//ancestor::button").click();
         } else if (whatChange.equals("Description")) {
             new Textarea("Description").clear();
             new Textarea("Description").input(changeValue);
-            $(By.id("update")).click();
+            $x("//span[contains(text(),'Update settings')]//ancestor::button").click();
         } else if (whatChange.equals("Project access type")) {
             new RadioButton("Project access type").choose(changeValue);
-            $(By.id("update")).click();
+            $x("//span[contains(text(),'Update settings')]//ancestor::button").click();
         } else {
             throw new Error(format("Incorrect value 'whatChange'= %s", whatChange));
         }
