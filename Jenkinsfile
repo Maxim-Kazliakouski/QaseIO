@@ -127,7 +127,7 @@ pipeline {
                   publishHTML([allowMissing: false,
                   alwaysLinkToLastBuild: false,
                   keepAll: true,
-                  reportDir: '/Volumes/MacOS/Users/max_kazliakouski/.jenkins/workspace/qase_pipeline/target/surefire-reports/',
+                  reportDir: 'reports',
                   reportFiles: 'index.html',
                   reportName: 'API Report',
                   reportTitles: '',
