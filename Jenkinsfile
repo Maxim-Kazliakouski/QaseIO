@@ -69,20 +69,20 @@ pipeline {
 //             }
 //          }
 //      }
-
-      stage('Generating Allure report') {
-         steps {
-             script {
-                     allure([
-                             includeProperties: false,
-                             jdk: '',
-                             properties: [],
-                             reportBuildPolicy: 'ALWAYS',
-                             results: [[path: 'target/allure-results']]
-                     ])
-              }
-          }
-      }
+//
+//       stage('Generating Allure report') {
+//          steps {
+//              script {
+//                      allure([
+//                              includeProperties: false,
+//                              jdk: '',
+//                              properties: [],
+//                              reportBuildPolicy: 'ALWAYS',
+//                              results: [[path: 'target/allure-results']]
+//                      ])
+//               }
+//           }
+//       }
 
       stage('Testing: API tests') {
          steps {
@@ -127,7 +127,7 @@ pipeline {
                   publishHTML([allowMissing: false,
                   alwaysLinkToLastBuild: false,
                   keepAll: true,
-                  reportDir: 'reports',
+                  reportDir: JENKINS_HOME + '/qase_pipeline/target/surefire-reports/',
                   reportFiles: 'index.html',
                   reportName: 'API Report',
                   reportTitles: '',
