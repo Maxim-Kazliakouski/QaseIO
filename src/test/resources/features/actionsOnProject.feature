@@ -23,7 +23,7 @@ Feature: User should be able to create/delete and change project
     Then Project '<projectName>' should disappear from Projects page
     Examples:
       | projectName          | projectCode | description | projectAccessType |
-      | project for deleting | PD          | ""          | private           |
+      | project for deleting | PD          | "deleting"  | private           |
 
   @tmsLink=case=5
     @testCaseID=5
@@ -37,5 +37,5 @@ Feature: User should be able to create/delete and change project
     #    Post conditions
     And Delete project by code '<projectCode>'
     Examples:
-      | projectName    | projectCode | description | projectAccessType | newProjectName |
-      | change project | CP          | ""          | private           | new name       |
+      | projectName    | projectCode | description            | projectAccessType | newProjectName |
+      | change project | CP          | "project for changing" | private           | new name       |
