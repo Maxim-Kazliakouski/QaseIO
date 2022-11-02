@@ -7,7 +7,7 @@
     </listeners>
     <test name="Chrome: tests">
         <classes>
-            <class name="tests.FeatureLauncherTest"/>
+<!--            <class name="tests.FeatureLauncherTest"/>-->
         </classes>
     </test>
 </suite>
