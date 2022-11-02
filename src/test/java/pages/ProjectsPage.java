@@ -24,9 +24,9 @@ public class ProjectsPage {
     @Step("Delete project {projectName}")
     public void deleteProjectByName(String projectName) {
         open("/projects");
-        String projectCode = $x(format("//a[text()='%s']", projectName)).getAttribute("href").substring(28);
-        open(format("/project/%s/delete", projectCode));
-        $x("//button[contains(text(),'Delete project')]").click();
+        $x(format("//a[text()='%s']//following::a[@class='btn btn-dropdown']", projectName)).click();
+        $x(format("//a[text()='%s']//following::div//button[text()='Delete']", projectName)).click();
+        $x("//button/span[text()='Delete project']").click();
     }
 
     public void changeProject(String projectName, String whatChange, String changeValue) {
