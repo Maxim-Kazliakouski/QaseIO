@@ -35,10 +35,10 @@ pipeline {
 
             withCredentials ([
             string(credentialsId: 'qase_token',
-            variable: 'token'),
+            variable: 'TOKEN_CREDENTIALS'),
             string(
             credentialsId: 'qase_password',
-            variable: 'password')
+            variable: 'PASSWORD_CREDENTIALS')
             ]) {
 
             // Run Maven on a Unix agent.
@@ -46,8 +46,8 @@ pipeline {
                 -P UI -Dbrowser=$BROWSER \
                 -Dheadless=$HEADLESS \
                 -Dqase.username=$USERNAME \
-                -Dqase.password=$password \
-                -Dtoken=$token \
+                -Dqase.password=$PASSWORD_CREDENTIALS \
+                -Dtoken=$TOKEN_CREDENTIALS \
                 -DtestRun=$TESTRUN \
                 -DcodeProject=$CODEPROJECT test"
                }
