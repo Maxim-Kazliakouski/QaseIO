@@ -1,5 +1,6 @@
 package dto;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.google.gson.annotations.SerializedName;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -8,9 +9,11 @@ import lombok.Data;
 @AllArgsConstructor
 @Data
 @Builder
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class TestCase<T> {
     //Basic
     String title;
+    Integer id;
     T status;
     String description;
     String suite;
