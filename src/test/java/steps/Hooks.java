@@ -3,16 +3,20 @@ package steps;
 import adapters.ProjectAPI;
 import com.codeborne.selenide.Configuration;
 import com.codeborne.selenide.logevents.SelenideLogger;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+import dto.Project;
 import io.cucumber.java.After;
 import io.cucumber.java.AfterAll;
 import io.cucumber.java.Before;
 import io.cucumber.java.Scenario;
 import io.github.bonigarcia.wdm.WebDriverManager;
 import io.qameta.allure.selenide.AllureSelenide;
+import io.restassured.response.Response;
 import lombok.extern.log4j.Log4j2;
 import org.testng.annotations.Listeners;
+import tests.api.moduls.APIResponse;
 import tests.api.moduls.Project.Entity;
-import tests.api.moduls.Project.Root;
 import tests.base.TestListener;
 import utils.PropertyReader;
 
@@ -66,9 +70,13 @@ public class Hooks {
 
     @AfterAll
     public static void clearingProjects() {
+        Gson gson = new Gson();
         ProjectAPI projectAPI = new ProjectAPI();
-        Root result = projectAPI.getAllProjects();
-        List<Entity> entities = result.result.entities;
+        Response response = projectAPI.getAllProjects();
+        APIResponse<Project> result = gson.fromJson(response.asString(),
+                new TypeToken<APIResponse<Project>>() {
+                }.getType());
+        List<Entity> entities = result.getResult().entities;
         List<String> code = entities.stream().map(Entity::getCode).collect(Collectors.toList());
         for (String eachCode : code) {
             if (!eachCode.equals("QASE") && !eachCode.equals("SHARELANE") && !eachCode.equals("PFT")) {
