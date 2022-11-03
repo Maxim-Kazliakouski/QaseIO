@@ -8,7 +8,6 @@ import io.restassured.RestAssured;
 import io.restassured.response.Response;
 import io.restassured.response.ValidatableResponse;
 import tests.api.Specifications;
-import tests.api.moduls.TestCase.Root;
 import utils.PropertyReader;
 
 import java.util.HashMap;
@@ -16,36 +15,30 @@ import java.util.List;
 import java.util.Map;
 
 import static io.restassured.RestAssured.given;
-import static java.lang.String.format;
 
 public class ProjectAPI {
     Gson gson;
-    Specifications spec;
     public static final String URL_API = PropertyReader.getProperty("qase.url.api");
-
 
     public ProjectAPI() {
         gson = new GsonBuilder().setPrettyPrinting().create();
-    }
-
-    public tests.api.moduls.Project.Root getAllProjects() {
         Specifications.installSpecification(
                 Specifications.requestSpec(URL_API),
                 Specifications.responseSpecStatusCode(200)
         );
+    }
+
+    public Response getAllProjects() {
         return RestAssured
                 .given()
                 .when()
                 .get("/v1/project")
                 .then()
                 .statusCode(200)
-                .extract().as(tests.api.moduls.Project.Root.class);
+                .extract().response();
     }
 
     public Response createProject(Project project) {
-        Specifications.installSpecification(
-                Specifications.requestSpec(URL_API),
-                Specifications.responseSpecStatusCode(200));
         String data = gson.toJson(project);
         return
                 given()
@@ -58,9 +51,6 @@ public class ProjectAPI {
     }
 
     public ValidatableResponse deleteProjectByCode(String code) {
-        Specifications.installSpecification(
-                Specifications.requestSpec(URL_API),
-                Specifications.responseSpecStatusCode(200));
         return
                 given()
                         .when()
@@ -68,22 +58,16 @@ public class ProjectAPI {
                         .then().log().all();
     }
 
-    public Root getCertainTestCase(String codeProject, Integer id) {
-        Specifications.installSpecification(
-                Specifications.requestSpec(URL_API),
-                Specifications.responseSpecStatusCode(200));
+    public Response getCertainTestCase(String codeProject, Integer id) {
         return RestAssured
                 .given()
                 .when()
-                .get(format("/v1/case/%s/%s", codeProject, id))
+                .get("/v1/case/{code}/{id}", codeProject, id)
                 .then().log().all()
-                .extract().as(Root.class);
+                .extract().response();
     }
 
     public ValidatableResponse createNewTestCase(TestCase testCase, String codeProject) {
-        Specifications.installSpecification(
-                Specifications.requestSpec(URL_API),
-                Specifications.responseSpecStatusCode(200));
         String data = gson.toJson(testCase);
         System.out.println(data);
         return
@@ -95,20 +79,14 @@ public class ProjectAPI {
     }
 
     public ValidatableResponse deleteTestCase(String codeProject, Integer testCaseID) {
-        Specifications.installSpecification(
-                Specifications.requestSpec(URL_API),
-                Specifications.responseSpecStatusCode(200));
         return
                 given()
                         .when()
-                        .delete(format("/v1/case/%s/%s", codeProject, testCaseID))
+                        .delete("/v1/case/{code}/{id}", codeProject, testCaseID)
                         .then().log().all();
     }
 
     public Response getAllTestCases(String codeProject) {
-        Specifications.installSpecification(
-                Specifications.requestSpec(URL_API),
-                Specifications.responseSpecStatusCode(200));
         return RestAssured.given()
                 .when()
                 .get("/v1/case/" + codeProject)
@@ -121,9 +99,6 @@ public class ProjectAPI {
                           Integer idTestRun,
                           String idTestCase,
                           Long time) {
-        Specifications.installSpecification(
-                Specifications.requestSpec(URL_API),
-                Specifications.responseSpecStatusCode(200));
         Map<String, Object> data = new HashMap<>();
         data.put("case_id", idTestCase);
         data.put("status", status);
@@ -131,14 +106,11 @@ public class ProjectAPI {
         given()
                 .body(data)
                 .when()
-                .post(format("v1/result/%s/%s", codeProject, idTestRun))
+                .post("/v1/result/{code}/{id}", codeProject, idTestRun)
                 .then();
     }
 
     public Response createTestRun(String codeProject, String testRunName) {
-        Specifications.installSpecification(
-                Specifications.requestSpec(URL_API),
-                Specifications.responseSpecStatusCode(200));
         Map<String, Object> data = new HashMap<>();
         data.put("title", testRunName);
         data.put("include_all_cases", true);
@@ -151,31 +123,22 @@ public class ProjectAPI {
     }
 
     public ValidatableResponse deleteTestRun(String codeProject, Integer idTestRun) {
-        Specifications.installSpecification(
-                Specifications.requestSpec(URL_API),
-                Specifications.responseSpecStatusCode(200));
         return
                 given()
                         .when()
-                        .delete(format("/v1/run/%s/%s", codeProject, idTestRun))
+                        .delete("/v1/run/{code}/{id}", codeProject, idTestRun)
                         .then();
     }
 
-    public tests.api.moduls.TestRun.Root getAllRuns(String projectCode) {
-        Specifications.installSpecification(
-                Specifications.requestSpec(URL_API),
-                Specifications.responseSpecStatusCode(200));
+    public Response getAllRuns(String projectCode) {
         return RestAssured
                 .when()
                 .get("/v1/run/" + projectCode)
                 .then()
-                .extract().as(tests.api.moduls.TestRun.Root.class);
+                .extract().response();
     }
 
     public Response createTestPlan(String testPlanName, List<Integer> casesID, String projectCode) {
-        Specifications.installSpecification(
-                Specifications.requestSpec(URL_API),
-                Specifications.responseSpecStatusCode(200));
         Map<String, Object> data = new HashMap<>();
         data.put("title", testPlanName);
         data.put("cases", casesID);
