@@ -58,7 +58,7 @@ public class ProjectAPI {
                         .then().log().all();
     }
 
-    public Response getCertainTestCase(String codeProject, Integer id) {
+    public Response getCertainTestCase(String codeProject, int id) {
         return RestAssured
                 .given()
                 .when()
@@ -78,7 +78,7 @@ public class ProjectAPI {
                         .then().log().all();
     }
 
-    public ValidatableResponse deleteTestCase(String codeProject, Integer testCaseID) {
+    public ValidatableResponse deleteTestCase(String codeProject, int testCaseID) {
         return
                 given()
                         .when()
@@ -122,7 +122,7 @@ public class ProjectAPI {
                 .extract().response();
     }
 
-    public ValidatableResponse deleteTestRun(String codeProject, Integer idTestRun) {
+    public ValidatableResponse deleteTestRun(String codeProject, int idTestRun) {
         return
                 given()
                         .when()
