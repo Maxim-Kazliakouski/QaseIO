@@ -2,8 +2,12 @@ package steps;
 
 import adapters.ProjectAPI;
 import com.github.javafaker.Faker;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.reflect.TypeToken;
 import dto.Project;
 import dto.TestCase;
+import dto.TestRun;
 import dto.factories.ProjectFactory;
 import dto.factories.TestCaseFactory;
 import io.cucumber.java.en.Then;
@@ -15,13 +19,10 @@ import lombok.Data;
 import lombok.extern.log4j.Log4j2;
 import org.hamcrest.Matchers;
 import org.testng.Assert;
+import tests.api.moduls.APIResponse;
 import tests.api.moduls.Project.Entity;
-import tests.api.moduls.TestCase.Root;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import static org.testng.Assert.*;
 
@@ -29,6 +30,7 @@ import static org.testng.Assert.*;
 @Data
 public class ApiSteps {
     Faker faker;
+    Gson gson;
     ProjectAPI projectAPI;
     String projectName;
     String projectCode;
@@ -39,15 +41,12 @@ public class ApiSteps {
     static Integer testRunID;
     static Integer testCaseID;
     static JsonPath jsonPath;
-    static Response resp;
+    static Response response;
     static ValidatableResponse valResp;
     static Project project;
-    static Root result;
-    static ValidatableResponse valRespTestRun;
-    static tests.api.moduls.TestRun.Root resultTestRun;
-    static tests.api.moduls.Project.Root resultProject;
 
     public ApiSteps() {
+        gson = new GsonBuilder().setPrettyPrinting().create();
         faker = new Faker();
         projectAPI = new ProjectAPI();
         this.projectName = faker.funnyName().name();
@@ -56,25 +55,28 @@ public class ApiSteps {
 
     @When("making request for getting projects list")
     public void getProjectList() {
-        resultProject = projectAPI.getAllProjects();
+        response = projectAPI.getAllProjects();
     }
 
     @Then("getting project list")
     public void gettingProjectList() {
-        List<Entity> entities = resultProject.result.entities;
+        APIResponse<Project> result = gson.fromJson(response.asString(),
+                new TypeToken<APIResponse<Project>>() {
+                }.getType());
+        List<Entity> entities = result.getResult().entities;
         entities.stream().map(Entity::getTitle).forEach(Assert::assertNotNull);
     }
 
     @When("making request for creating new project")
     public void createNewProject() {
         project = ProjectFactory.getByAccessType(projectName, projectCode, description, "private");
-        resp = projectAPI.createProject(project);
-        projectCodeForTest = resp.path("result.code").toString();
+        response = projectAPI.createProject(project);
+        projectCodeForTest = response.path("result.code").toString();
     }
 
     @Then("new project is created")
     public void newProjectIsCreated() {
-        assertEquals(resp.jsonPath().get("result.code").toString(), project.getProjectCode());
+        assertEquals(response.jsonPath().get("result.code").toString(), project.getProjectCode());
     }
 
     @When("deleting project by projectCode")
@@ -93,13 +95,17 @@ public class ApiSteps {
         // test data
         codeProject = "PFT";
         testCaseID = 1;
-        result = projectAPI.getCertainTestCase(codeProject, testCaseID);
+        response = projectAPI.getCertainTestCase(codeProject, testCaseID);
     }
 
     @Then("certain test case is received")
     public void certainTestCaseIsReceived() {
         String testCaseTitle = "Authorization";
-        assertTrue(result.status, "The key 'status' has value 'false'");
+        APIResponse<TestCase> result = gson.fromJson(response.asString(),
+                new TypeToken<APIResponse<TestCase>>() {
+                }.getType());
+        System.out.println(result.getStatus());
+        assertTrue(result.getStatus(), "'false' status has been received");
         assertEquals(result.getResult().getId(), testCaseID);
         assertEquals(result.getResult().getTitle(), testCaseTitle);
     }
@@ -108,23 +114,22 @@ public class ApiSteps {
     public void createTestCase() {
         String codeProject = "PFT";
         TestCase testCase = TestCaseFactory.getTestCase("API", "Login");
-        resp = projectAPI.createNewTestCase(testCase, codeProject)
+        response = projectAPI.createNewTestCase(testCase, codeProject)
                 .body("status", Matchers.is(true))
                 .body("result.id", Matchers.notNullValue())
                 .extract().response();
-        caseID = resp.path("result.id");
+        caseID = response.path("result.id");
     }
 
     @Then("new test case is created")
     public void newTestCaseIsCreated() {
-        assertTrue(resp.path("status"), "Test case hasn't been created!");
+        assertTrue(response.path("status"), "Test case hasn't been created!");
     }
 
     @When("making request for deleting test case")
     public void deleteTestCase() {
         codeProject = "PFT";
         valResp = projectAPI.deleteTestCase(codeProject, caseID);
-
     }
 
     @Then("test case is deleted")
@@ -136,8 +141,8 @@ public class ApiSteps {
     @When("making request for getting list of test cases")
     public void getTestCases() {
         codeProject = "PFT";
-        resp = projectAPI.getAllTestCases(codeProject);
-        jsonPath = resp.jsonPath();
+        response = projectAPI.getAllTestCases(codeProject);
+        jsonPath = response.jsonPath();
     }
 
     @Then("getting test cases list")
@@ -158,33 +163,36 @@ public class ApiSteps {
 
     @When("making request for creating new test run")
     public void createTestRun() {
-        resp = projectAPI.createTestRun("PFT", "testRun123");
+        response = projectAPI.createTestRun("PFT", "testRun123");
     }
 
     @Then("new test run is created")
     public void newTestRunIsCreated() {
-        assertTrue(resp.path("status"), "Status false");
-        testRunID = resp.path("result.id");
+        assertTrue(response.path("status"), "Status false");
+        testRunID = response.path("result.id");
     }
 
     @When("making request for getting all tests run of the project")
     public void getRuns() {
-        resultTestRun = projectAPI.getAllRuns("PFT");
+        response = projectAPI.getAllRuns("PFT");
     }
 
     @Then("getting list of all tests runs")
     public void gettingListOfAllTestsRuns() {
-        assertTrue(resultTestRun.status, "Fail status");
+        APIResponse<TestRun> result = gson.fromJson(response.asString(),
+                new TypeToken<APIResponse<TestRun>>() {
+                }.getType());
+        assertTrue(result.getStatus(), "Fail status");
     }
 
     @When("making request for deleting test run")
     public void deleteTestRun() {
-        valRespTestRun = projectAPI.deleteTestRun("PFT", testRunID);
+        valResp = projectAPI.deleteTestRun("PFT", testRunID);
     }
 
     @Then("test run is deleted")
     public void testRunIsDeleted() {
-        valRespTestRun
+        valResp
                 .statusCode(200)
                 .body("status", Matchers.is(true));
     }
@@ -193,12 +201,12 @@ public class ApiSteps {
     public void creatingTestPlan() {
         List<Integer> casesIDs = new ArrayList<>();
         casesIDs.add(2);
-        resp = projectAPI.createTestPlan("123 test plan", casesIDs, "PFT");
+        response = projectAPI.createTestPlan("123 test plan", casesIDs, "PFT");
     }
 
     @Then("test plan is created")
     public void testPlanIsCreated() {
-        assertTrue(resp.path("status"));
-        assertNotNull(resp.path("result.id"));
+        assertTrue(response.path("status"));
+        assertNotNull(response.path("result.id"));
     }
 }
