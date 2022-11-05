@@ -26,7 +26,7 @@ pipeline {
             steps {
                 catchError {
                     script {
-                        sh "docker run aerokube/selenoid:1.10.8"
+                        docker.image('aerokube/selenoid:1.10.8')
                     }
                 }
             }
@@ -35,7 +35,7 @@ pipeline {
             steps {
                 catchError {
                     script {
-                        sh "docker run aerokube/selenoid-ui:de-latest"
+                        docker.image('aerokube/selenoid-ui:de-latest')
                     }
                 }
             }
