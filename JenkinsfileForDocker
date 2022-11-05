@@ -22,7 +22,12 @@ pipeline {
     }
 
    stages {
-      stage('Testing: UI tests') {
+
+    stage('Running tests...') {
+
+        parallel{
+
+        stage('Testing: UI tests') {
 
          steps {
 
@@ -68,9 +73,7 @@ pipeline {
                junit '**/target/surefire-reports/TEST-*.xml'
             }
          }
-     }
 
-      stage('Generating Allure report') {
          steps {
              script {
                      allure([
@@ -80,11 +83,13 @@ pipeline {
                              reportBuildPolicy: 'ALWAYS',
                              results: [[path: 'target/allure-results']]
                      ])
-              }
-          }
-      }
+            }
+        }
+    }
+
 
       stage('Testing: API tests') {
+
          steps {
 
           script {
@@ -120,9 +125,7 @@ pipeline {
                junit '**/target/surefire-reports/TEST-*.xml'
                     }
                }
-          }
 
-      stage('Generating HTML report') {
          steps {
                   publishHTML([allowMissing: false,
                   alwaysLinkToLastBuild: false,
@@ -132,7 +135,9 @@ pipeline {
                   reportName: 'API Report',
                   reportTitles: '',
                   useWrapperFileDirectly: true])
+                    }
+                }
             }
-         }
-      }
-   }
+        }
+    }
+}
