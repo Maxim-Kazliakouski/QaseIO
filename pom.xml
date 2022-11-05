@@ -68,6 +68,7 @@
             <id>UI</id>
             <properties>
                 <browser></browser>
+                <browserVersion></browserVersion>
                 <headless></headless>
                 <qase.username></qase.username>
                 <qase.password></qase.password>
