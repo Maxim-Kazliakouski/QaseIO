@@ -24,12 +24,20 @@ pipeline {
     stages {
         stage("Launch selenoid...") {
             steps {
-                sh "docker container start selenoid"
+                catchError {
+                    script {
+                        docker.image('aerokube/selenoid:1.10.8')
+                    }
+                }
             }
         }
-        stage('Launch seleind-UI') {
+        stage('Launch selenoid-UI') {
             steps {
-                sh "docker container start selenoid-ui"
+                catchError {
+                    script {
+                        docker.image('aerokube/selenoid-ui:de-latest')
+                    }
+                }
             }
         }
         stage('Testing: UI tests') {
