@@ -1,57 +1,49 @@
 pipeline {
-   agent any
+    agent any
 
-   tools {
-      // Install the Maven version configured as "M3" and add it to the path.
-      maven "M2"
-   }
+    tools {
+        // Install the Maven version configured as "M3" and add it to the path.
+        maven "M2"
+    }
 //     triggers {
 //         cron('0 8 * * *')
 //     }
     parameters {
-      gitParameter ( branch: '',
-                     branchFilter: 'origin/(.*)',
-                     defaultValue: 'master',
-                     description: '',
-                     name: 'BRANCH',
-                     quickFilterEnabled: true,
-                     selectedValue: 'NONE',
-                     sortMode: 'NONE',
-                     tagFilter: '*',
-                     type: 'PT_BRANCH' )
+        gitParameter ( branch: '',
+        branchFilter: 'origin/(.*)',
+        defaultValue: 'master',
+        description: '',
+        name: 'BRANCH',
+        quickFilterEnabled: true,
+        selectedValue: 'NONE',
+        sortMode: 'NONE',
+        tagFilter: '*',
+        type: 'PT_BRANCH' )
     }
 
-   stages {
+    stages {
 
-    stage('Running tests...') {
+        stage('UI test') {
 
-        parallel {
+            steps {
 
-        stage('Testing 1st part') {
+                script {
 
-                                agent {
-                        label "UI"
-                    }
+                    try {
 
-         steps {
+                        // Get some code from a GitHub repository
+                        git branch: "${params.BRANCH}",  url: 'https://github.com/Maxim-Kazliakouski/QaseIO.git'
 
-          script {
+                        withCredentials ([
+                            string(credentialsId: 'qase_token',
+                        variable: 'TOKEN_CREDENTIALS'),
+                            string(
+                                credentialsId: 'qase_password',
+                                variable: 'PASSWORD_CREDENTIALS')
+                        ]) {
 
-          try {
-
-            // Get some code from a GitHub repository
-            git branch: "${params.BRANCH}",  url: 'https://github.com/Maxim-Kazliakouski/QaseIO.git'
-
-            withCredentials ([
-            string(credentialsId: 'qase_token',
-            variable: 'TOKEN_CREDENTIALS'),
-            string(
-            credentialsId: 'qase_password',
-            variable: 'PASSWORD_CREDENTIALS')
-            ]) {
-
-            // Run Maven on a Unix agent.
-            sh "mvn clean -Dsurefire.suiteXmlFiles=src/test/resources/chromeLaunchTest.xml \
+                            // Run Maven on a Unix agent.
+                            sh "mvn clean -Dsurefire.suiteXmlFiles=src/test/resources/chromeLaunchTest.xml \
                 -P UI -Dbrowser=$BROWSER \
                 -Dheadless=$HEADLESS \
                 -Dqase.username=$USERNAME \
@@ -59,98 +51,84 @@ pipeline {
                 -Dtoken=$TOKEN_CREDENTIALS \
                 -DtestRun=$TESTRUN \
                 -DcodeProject=$CODEPROJECT test"
-               }
-          }
-                   catch (Exception error) {
-          unstable('Testing failed')
-         }
-
-                     allure([
-                             includeProperties: true,
-                             jdk: '',
-                             properties: [],
-                             reportBuildPolicy: 'ALWAYS',
-                             results: [[path: 'target/allure-results']]
-                     ])
+                        }
+                    } catch (Exception error) {
+                        unstable('Testing failed')
+                    }
+                }
             }
-     }
 
             // To run Maven on a Windows agent, use
             // bat "mvn -Dmaven.test.failure.ignore=true clean package"
 
-         post {
-            // If Maven was able to run the tests, even if some of the test
-            // failed, record the test results and archive the jar file.
-            success {
-               junit '**/target/surefire-reports/TEST-*.xml'
+            post {
+                // If Maven was able to run the tests, even if some of the test
+                // failed, record the test results and archive the jar file.
+                success {
+                    junit '**/target/surefire-reports/TEST-*.xml'
+                }
             }
         }
-    }
 
 
-      stage('Testing 2nd part') {
-                            agent {
-                        label "API"
-                    }
+        stage('API tests') {
 
-         steps {
+            steps {
 
-          script {
+                script {
 
-               try {
-          // Get some code from a GitHub repository
-          git branch: "${params.BRANCH}", url: 'https://github.com/Maxim-Kazliakouski/QaseIO.git'
+                    try {
+                        // Get some code from a GitHub repository
+                        git branch: "${params.BRANCH}", url: 'https://github.com/Maxim-Kazliakouski/QaseIO.git'
 
-            withCredentials ([
-            string(credentialsId: 'qase_token',
-            variable: 'token')
-            ]) {
+                        withCredentials ([
+                            string(credentialsId: 'qase_token',
+                        variable: 'token')
+                        ]) {
 
-            // Run Maven on a Unix agent.
-            sh "mvn clean -Dsurefire.suiteXmlFiles=src/test/resources/APItests.xml \
+                            // Run Maven on a Unix agent.
+                            sh "mvn clean -Dsurefire.suiteXmlFiles=src/test/resources/APItests.xml \
              -P API -Dtoken=$token \
              -Dapi=$API test"
 
-            // To run Maven on a Windows agent, use
-            // bat "mvn -Dmaven.test.failure.ignore=true clean package"
-                }
-           }
-               catch (Exception error) {
-          unstable('Testing failed')
-         }
-    }
-                  //     publishHTML([allowMissing: false,
-                  // alwaysLinkToLastBuild: false,
-                  // keepAll: true,
-                  // reportDir: JENKINS_HOME + '/qase/target/surefire-reports/',
-                  // reportFiles: 'index.html',
-                  // reportName: 'API Report',
-                  // reportTitles: '',
-                  // useWrapperFileDirectly: true])
-}
-
-         post {
-            // If Maven was able to run the tests, even if some of the test
-            // failed, record the test results and archive the jar file.
-            success {
-               junit '**/target/surefire-reports/TEST-*.xml'
+                            // To run Maven on a Windows agent, use
+                            // bat "mvn -Dmaven.test.failure.ignore=true clean package"
                         }
+                    } catch (Exception error) {
+                        unstable('Testing failed')
                     }
                 }
+                //     publishHTML([allowMissing: false,
+                // alwaysLinkToLastBuild: false,
+                // keepAll: true,
+                // reportDir: JENKINS_HOME + '/qase/target/surefire-reports/',
+                // reportFiles: 'index.html',
+                // reportName: 'API Report',
+                // reportTitles: '',
+                // useWrapperFileDirectly: true])
+            }
+
+            post {
+                // If Maven was able to run the tests, even if some of the test
+                // failed, record the test results and archive the jar file.
+                success {
+                    junit '**/target/surefire-reports/TEST-*.xml'
+                }
             }
         }
 
-              stage('Generating HTML report') {
-         steps {
-                  publishHTML([allowMissing: false,
-                  alwaysLinkToLastBuild: false,
-                  keepAll: true,
-                  reportDir: JENKINS_HOME + '/qase/target/surefire-reports/',
-                  reportFiles: 'index.html',
-                  reportName: 'API Report',
-                  reportTitles: '',
-                  useWrapperFileDirectly: true])
+        stage('Generating Allure report') {
+            steps {
+                script {
+                    allure([
+                        includeProperties: true,
+                        jdk: '',
+                        properties: [],
+                        reportBuildPolicy: 'ALWAYS',
+                        results: [[path: 'target/allure-results']]
+                    ])
                 }
             }
         }
     }
+}
