@@ -25,7 +25,7 @@ pipeline {
 
     stage('Running tests...') {
 
-        parallel{
+        parallel {
 
         stage('Testing: UI tests') {
 
@@ -60,8 +60,16 @@ pipeline {
                    catch (Exception error) {
           unstable('Testing failed')
          }
+
+                     allure([
+                             includeProperties: true,
+                             jdk: '',
+                             properties: [],
+                             reportBuildPolicy: 'ALWAYS',
+                             results: [[path: 'target/allure-results']]
+                     ])
+            }
      }
-}
 
             // To run Maven on a Windows agent, use
             // bat "mvn -Dmaven.test.failure.ignore=true clean package"
@@ -71,18 +79,6 @@ pipeline {
             // failed, record the test results and archive the jar file.
             success {
                junit '**/target/surefire-reports/TEST-*.xml'
-            }
-         }
-
-         steps {
-             script {
-                     allure([
-                             includeProperties: true,
-                             jdk: '',
-                             properties: [],
-                             reportBuildPolicy: 'ALWAYS',
-                             results: [[path: 'target/allure-results']]
-                     ])
             }
         }
     }
@@ -116,18 +112,7 @@ pipeline {
           unstable('Testing failed')
          }
     }
-}
-
-         post {
-            // If Maven was able to run the tests, even if some of the test
-            // failed, record the test results and archive the jar file.
-            success {
-               junit '**/target/surefire-reports/TEST-*.xml'
-                    }
-               }
-
-         steps {
-                  publishHTML([allowMissing: false,
+                      publishHTML([allowMissing: false,
                   alwaysLinkToLastBuild: false,
                   keepAll: true,
                   reportDir: JENKINS_HOME + '/qase/target/surefire-reports/',
@@ -135,6 +120,14 @@ pipeline {
                   reportName: 'API Report',
                   reportTitles: '',
                   useWrapperFileDirectly: true])
+}
+
+         post {
+            // If Maven was able to run the tests, even if some of the test
+            // failed, record the test results and archive the jar file.
+            success {
+               junit '**/target/surefire-reports/TEST-*.xml'
+                        }
                     }
                 }
             }
