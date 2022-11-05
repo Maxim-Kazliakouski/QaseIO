@@ -23,7 +23,7 @@ pipeline {
 
     stages {
 
-        stage('UI tests') {
+        stage('UI test') {
 
             steps {
 
@@ -87,7 +87,7 @@ pipeline {
                         ]) {
 
                             // Run Maven on a Unix agent.
-                            sh "mvn clean -Dsurefire.suiteXmlFiles=src/test/resources/APItests.xml \
+                            sh "mvn -Dsurefire.suiteXmlFiles=src/test/resources/APItests.xml \
              -P API -Dtoken=$token \
              -Dapi=$API test"
 
