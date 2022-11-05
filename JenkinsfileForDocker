@@ -23,7 +23,7 @@ pipeline {
 
     stages {
 
-        stage('UI test') {
+        stage('UI tests') {
 
             steps {
 
