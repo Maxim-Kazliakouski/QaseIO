@@ -5,6 +5,24 @@ pipeline {
       // Install the Maven version configured as "M3" and add it to the path.
       maven "M2"
    }
+    stage("Launch selenoid...") {
+        steps {
+            catchError {
+                script {
+                    sh "docker run aerokube/selenoid:1.10.8"
+                }
+            }
+        }
+    }
+    stage('Launch seleind-UI') {
+        steps {
+            catchError {
+                script {
+                    sh "docker run aerokube/selenoid-ui:de-latest"
+                }
+            }
+        }
+    }
 //     triggers {
 //         cron('0 8 * * *')
 //     }
@@ -44,6 +62,7 @@ pipeline {
             // Run Maven on a Unix agent.
             sh "mvn clean -Dsurefire.suiteXmlFiles=src/test/resources/chromeLaunchTest.xml \
                 -P UI -Dbrowser=$BROWSER \
+                -DbrowserVersion=$VERSION \
                 -Dheadless=$HEADLESS \
                 -Dqase.username=$USERNAME \
                 -Dqase.password=$PASSWORD_CREDENTIALS \
