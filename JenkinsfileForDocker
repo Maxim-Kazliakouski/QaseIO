@@ -27,7 +27,7 @@ pipeline {
 
         parallel {
 
-        stage('Testing...') {
+        stage('Testing 1st part') {
 
                                 agent {
                         label "UI"
@@ -88,7 +88,7 @@ pipeline {
     }
 
 
-      stage('Testing...') {
+      stage('Testing 2nd part') {
                             agent {
                         label "API"
                     }
