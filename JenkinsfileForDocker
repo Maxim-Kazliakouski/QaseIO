@@ -98,14 +98,6 @@ pipeline {
                         unstable('Testing failed')
                     }
                 }
-                //     publishHTML([allowMissing: false,
-                // alwaysLinkToLastBuild: false,
-                // keepAll: true,
-                // reportDir: JENKINS_HOME + '/qase/target/surefire-reports/',
-                // reportFiles: 'index.html',
-                // reportName: 'API Report',
-                // reportTitles: '',
-                // useWrapperFileDirectly: true])
             }
 
             post {
