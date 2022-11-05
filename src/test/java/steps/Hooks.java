@@ -14,14 +14,20 @@ import io.github.bonigarcia.wdm.WebDriverManager;
 import io.qameta.allure.selenide.AllureSelenide;
 import io.restassured.response.Response;
 import lombok.extern.log4j.Log4j2;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.remote.DesiredCapabilities;
+import org.openqa.selenium.remote.RemoteWebDriver;
 import org.testng.annotations.Listeners;
 import tests.api.moduls.APIResponse;
 import tests.api.moduls.Project.Entity;
 import tests.base.TestListener;
 import utils.PropertyReader;
 
+import java.net.MalformedURLException;
+import java.net.URISyntaxException;
 import java.util.Collection;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 import static com.codeborne.selenide.Selenide.open;
@@ -37,7 +43,7 @@ public class Hooks {
     public static String scenarioName;
 
     @Before
-    public void init(Scenario scenario) {
+    public void init(Scenario scenario) throws URISyntaxException, MalformedURLException {
         if (Boolean.parseBoolean(PropertyReader.getProperty("api"))) {
         } else {
 //      getting test case ID
@@ -49,12 +55,21 @@ public class Hooks {
             WebDriverManager.chromedriver().setup();
             username = System.getProperty("USERNAME", PropertyReader.getProperty("qase.username"));
             password = System.getProperty("PASSWORD", PropertyReader.getProperty("qase.password"));
+            DesiredCapabilities capabilities = new DesiredCapabilities();
+            capabilities.setCapability("browserName", PropertyReader.getProperty("browser"));
+            capabilities.setCapability("browserVersion", PropertyReader.getProperty("browserVersion"));
+            capabilities.setCapability("selenoid:options", Map.<String, Object>of(
+                    "enableVNC", true,
+                    "enableVideo", true
+            ));
             Configuration.baseUrl = System.getProperty("QASE_URL", PropertyReader.getProperty("qase.url"));
-            Configuration.browser = PropertyReader.getProperty("browser");
+//            Configuration.browser = PropertyReader.getProperty("browser");
             Configuration.headless = Boolean.parseBoolean(PropertyReader.getProperty("headless"));
             Configuration.timeout = 10000;
             Configuration.reportsFolder = "target/screenshots";
             SelenideLogger.addListener("AllureSelenide", new AllureSelenide().screenshots(true).savePageSource(false));
+            Configuration.remote = "http://localhost:4444/wd/hub";
+            Configuration.browserCapabilities = capabilities;
             open();
             getWebDriver().manage().window().maximize();
         }
