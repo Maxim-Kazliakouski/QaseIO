@@ -22,22 +22,14 @@ pipeline {
     }
 
     stages {
-        stage("Launch selenoid...") {
+        stage('Prepare Selenoid') {
             steps {
-                catchError {
-                    script {
-                        docker.image('aerokube/selenoid:1.10.8')
-                    }
-                }
-            }
-        }
-        stage('Launch selenoid-UI') {
-            steps {
-                catchError {
-                    script {
-                        docker.image('aerokube/selenoid-ui:de-latest')
-                    }
-                }
+                sh 'docker pull selenoid/chrome'
+                sh 'chmod +x src/test/resources/ConfigurationManager/cm'
+                sh 'src/test/resources/ConfigurationManager/cm selenoid start'
+                sh 'src/test/resources/ConfigurationManager/cm selenoid-ui start'
+                sh 'src/test/resources/selenoid_manager/cm selenoid status'
+                sh 'curl http://localhost:4444/status'
             }
         }
         stage('Testing: UI tests') {
@@ -88,20 +80,6 @@ pipeline {
             }
         }
 
-        stage('Generating Allure report') {
-            steps {
-                script {
-                    allure([
-                        includeProperties: false,
-                        jdk: '',
-                        properties: [],
-                        reportBuildPolicy: 'ALWAYS',
-                        results: [[path: 'target/allure-results']]
-                    ])
-                }
-            }
-        }
-
         stage('Testing: API tests') {
             steps {
 
@@ -117,7 +95,7 @@ pipeline {
                         ]) {
 
                             // Run Maven on a Unix agent.
-                            sh "mvn clean -Dsurefire.suiteXmlFiles=src/test/resources/APItests.xml \
+                            sh "mvn -Dsurefire.suiteXmlFiles=src/test/resources/APItests.xml \
              -P API -Dtoken=$token \
              -Dapi=$API test"
 
@@ -139,16 +117,19 @@ pipeline {
             }
         }
 
-        stage('Generating HTML report') {
+        stage('Generating Allure report') {
             steps {
-                publishHTML([allowMissing: false,
-                alwaysLinkToLastBuild: false,
-                keepAll: true,
-                reportDir: JENKINS_HOME + '/qase_pipeline/target/surefire-reports/',
-                reportFiles: 'index.html',
-                reportName: 'API Report',
-                reportTitles: '',
-                useWrapperFileDirectly: true])
+                script {
+                    sh 'docker stop selenoid'
+                    sh 'docker rm selenoid'
+                    allure([
+                        includeProperties: false,
+                        jdk: '',
+                        properties: [],
+                        reportBuildPolicy: 'ALWAYS',
+                        results: [[path: 'target/allure-results']]
+                    ])
+                }
             }
         }
     }
