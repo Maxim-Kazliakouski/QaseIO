@@ -25,10 +25,10 @@ pipeline {
         stage('Prepare Selenoid') {
             steps {
                 sh 'docker pull selenoid/chrome'
-                sh 'chmod +x src/test/resources/ConfigurationManager/cm'
-                sh 'src/test/resources/ConfigurationManager/cm selenoid start'
-                sh 'src/test/resources/ConfigurationManager/cm selenoid-ui start'
-                sh 'src/test/resources/selenoid_manager/cm selenoid status'
+                sh 'chmod +x /Volumes/Work/QaseIO/src/test/resources/ConfigurationManager/cm'
+                sh '/Volumes/Work/QaseIO/src/test/resources/ConfigurationManager/cm selenoid start'
+                sh '/Volumes/Work/QaseIO/src/test/resources/ConfigurationManager/cm selenoid-ui start'
+                sh '/Volumes/Work/QaseIO/src/test/resources/ConfigurationManager/cm selenoid status'
                 sh 'curl http://localhost:4444/status'
             }
         }
