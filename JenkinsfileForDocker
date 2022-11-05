@@ -27,7 +27,11 @@ pipeline {
 
         parallel {
 
-        stage('Testing: UI tests') {
+        stage('Testing...') {
+
+                                agent {
+                        label "UI"
+                    }
 
          steps {
 
@@ -84,7 +88,10 @@ pipeline {
     }
 
 
-      stage('Testing: API tests') {
+      stage('Testing...') {
+                            agent {
+                        label "API"
+                    }
 
          steps {
 
@@ -112,14 +119,14 @@ pipeline {
           unstable('Testing failed')
          }
     }
-                      publishHTML([allowMissing: false,
-                  alwaysLinkToLastBuild: false,
-                  keepAll: true,
-                  reportDir: JENKINS_HOME + '/qase/target/surefire-reports/',
-                  reportFiles: 'index.html',
-                  reportName: 'API Report',
-                  reportTitles: '',
-                  useWrapperFileDirectly: true])
+                  //     publishHTML([allowMissing: false,
+                  // alwaysLinkToLastBuild: false,
+                  // keepAll: true,
+                  // reportDir: JENKINS_HOME + '/qase/target/surefire-reports/',
+                  // reportFiles: 'index.html',
+                  // reportName: 'API Report',
+                  // reportTitles: '',
+                  // useWrapperFileDirectly: true])
 }
 
          post {
@@ -132,5 +139,18 @@ pipeline {
                 }
             }
         }
+
+              stage('Generating HTML report') {
+         steps {
+                  publishHTML([allowMissing: false,
+                  alwaysLinkToLastBuild: false,
+                  keepAll: true,
+                  reportDir: JENKINS_HOME + '/qase/target/surefire-reports/',
+                  reportFiles: 'index.html',
+                  reportName: 'API Report',
+                  reportTitles: '',
+                  useWrapperFileDirectly: true])
+                }
+            }
+        }
     }
-}
