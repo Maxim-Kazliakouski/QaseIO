@@ -6,9 +6,9 @@ import io.cucumber.testng.CucumberOptions;
 @CucumberOptions(
         features = {
                 "src/test/resources/features/login.feature",
-//                "src/test/resources/features/actionsOnProject.feature",
-//                "src/test/resources/features/createTestCase.feature",
-//                "src/test/resources/features/createTestPlan.feature"
+                "src/test/resources/features/actionsOnProject.feature",
+                "src/test/resources/features/createTestCase.feature",
+                "src/test/resources/features/createTestPlan.feature"
         },
         glue = "steps",
         plugin = {"pretty", "io.qameta.allure.cucumber7jvm.AllureCucumber7Jvm",
