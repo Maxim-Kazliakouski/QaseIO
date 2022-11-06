@@ -22,7 +22,7 @@ pipeline {
     }
 
     stages {
-        stage('Prepare Selenoid') {
+        stage('Prepare Selenoid: starting containers') {
             steps {
                 sh 'docker pull selenoid/chrome'
                 sh 'chmod +x /Volumes/Work/QaseIO/src/test/resources/ConfigurationManager/cm'
