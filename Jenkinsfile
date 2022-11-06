@@ -55,6 +55,7 @@ pipeline {
                             sh "mvn clean -Dsurefire.suiteXmlFiles=src/test/resources/chromeLaunchTest.xml \
                 -P UI -Dbrowser=$BROWSER \
                 -DbrowserVersion=$VERSION \
+                -DvideoTestRecord=$VIDEO_TEST_RECORD \
                 -Dheadless=$HEADLESS \
                 -Dqase.username=$USERNAME \
                 -Dqase.password=$PASSWORD_CREDENTIALS \

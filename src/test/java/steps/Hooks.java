@@ -54,7 +54,7 @@ public class Hooks {
             capabilities.setCapability("browserVersion", PropertyReader.getProperty("browserVersion"));
             capabilities.setCapability("selenoid:options", Map.<String, Object>of(
                     "enableVNC", true,
-                    "enableVideo", false,
+                    "enableVideo", Boolean.parseBoolean(PropertyReader.getProperty("videoTestRecord")),
                     "enableLog", true
             ));
             capabilities.setCapability("logName", "my-cool-log.log");
@@ -97,6 +97,7 @@ public class Hooks {
                 System.out.printf("Project '%s' has been deleted\n", eachCode);
                 log.info(format("Project '%s' has been deleted\n", eachCode));
             }
+            else log.info("There is nothing to delete");
         }
     }
 }
