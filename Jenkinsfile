@@ -32,7 +32,7 @@ pipeline {
                 sh 'curl http://localhost:4444/status'
             }
         }
-        stage('Testing: UI tests') {
+        stage('UI tests') {
 
             steps {
 
@@ -80,7 +80,7 @@ pipeline {
             }
         }
 
-        stage('Testing: API tests') {
+        stage('API tests') {
             steps {
 
                 script {
@@ -117,11 +117,20 @@ pipeline {
             }
         }
 
-        stage('Generating Allure report') {
+        stage('Stopping and deleting containers') {
             steps {
                 script {
                     sh 'docker stop selenoid'
                     sh 'docker rm selenoid'
+                    sh 'docker stop selenoid-ui'
+                    sh 'docker rm selenoid-ui'
+                }
+            }
+        }
+
+        stage('Generating Allure report') {
+            steps {
+                script {
                     allure([
                         includeProperties: false,
                         jdk: '',
