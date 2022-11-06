@@ -52,7 +52,7 @@ public class Hooks {
             }
             scenarioName = scenario.getName();
 //            WebDriverManager.chromedriver().setup();
-            WebDriverManager.firefoxdriver().setup();
+//            WebDriverManager.firefoxdriver().setup();
             username = System.getProperty("USERNAME", PropertyReader.getProperty("qase.username"));
             password = System.getProperty("PASSWORD", PropertyReader.getProperty("qase.password"));
             DesiredCapabilities capabilities = new DesiredCapabilities();
@@ -67,7 +67,7 @@ public class Hooks {
             capabilities.setCapability("videoScreenSize", "1920x1080");
             capabilities.setCapability("videoName", format("%s.mp4", scenarioName));
             Configuration.baseUrl = System.getProperty("QASE_URL", PropertyReader.getProperty("qase.url"));
-//            Configuration.browser = PropertyReader.getProperty("browser");
+            Configuration.browser = PropertyReader.getProperty("browser");
             Configuration.headless = Boolean.parseBoolean(PropertyReader.getProperty("headless"));
             Configuration.timeout = 10000;
             Configuration.reportsFolder = "target/screenshots";
