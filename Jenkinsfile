@@ -24,7 +24,7 @@ pipeline {
     stages {
         stage('Prepare Selenoid: starting containers') {
             steps {
-                sh 'docker pull selenoid/chrome'
+                sh "docker pull selenoid/$BROWSER"
                 sh 'chmod +x /Volumes/Work/QaseIO/src/test/resources/ConfigurationManager/cm'
                 sh '/Volumes/Work/QaseIO/src/test/resources/ConfigurationManager/cm selenoid start'
                 sh '/Volumes/Work/QaseIO/src/test/resources/ConfigurationManager/cm selenoid-ui start'
