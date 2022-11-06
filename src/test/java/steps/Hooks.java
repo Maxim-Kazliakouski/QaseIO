@@ -47,7 +47,6 @@ public class Hooks {
                 caseID = eachCaseID.substring(12);
             }
             scenarioName = scenario.getName();
-//            WebDriverManager.chromedriver().setup();
             username = System.getProperty("USERNAME", PropertyReader.getProperty("qase.username"));
             password = System.getProperty("PASSWORD", PropertyReader.getProperty("qase.password"));
             DesiredCapabilities capabilities = new DesiredCapabilities();
@@ -71,7 +70,6 @@ public class Hooks {
             Configuration.browserCapabilities = capabilities;
             open();
             getWebDriver().manage().window().maximize();
-//            getWebDriver().manage().window().setSize(new Dimension(1920, 1080));
         }
     }
 
