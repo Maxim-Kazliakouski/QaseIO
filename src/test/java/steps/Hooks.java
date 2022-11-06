@@ -76,8 +76,8 @@ public class Hooks {
             Configuration.remote = "http://localhost:4444/wd/hub";
             Configuration.browserCapabilities = capabilities;
             open();
-//            getWebDriver().manage().window().maximize();
-            getWebDriver().manage().window().setSize(new Dimension(1920, 1080));
+            getWebDriver().manage().window().maximize();
+//            getWebDriver().manage().window().setSize(new Dimension(1920, 1080));
         }
     }
 
