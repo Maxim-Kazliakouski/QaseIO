@@ -14,14 +14,12 @@ import io.github.bonigarcia.wdm.WebDriverManager;
 import io.qameta.allure.selenide.AllureSelenide;
 import io.restassured.response.Response;
 import lombok.extern.log4j.Log4j2;
-import org.openqa.selenium.Dimension;
-import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.remote.DesiredCapabilities;
-import org.openqa.selenium.remote.RemoteWebDriver;
 import org.testng.annotations.Listeners;
 import tests.api.moduls.APIResponse;
 import tests.api.moduls.Project.Entity;
 import tests.base.TestListener;
+import utils.GetDate;
 import utils.PropertyReader;
 
 import java.net.MalformedURLException;
@@ -44,7 +42,7 @@ public class Hooks {
     public static String scenarioName;
 
     @Before
-    public void init(Scenario scenario) throws URISyntaxException, MalformedURLException {
+    public void init(Scenario scenario) {
         if (Boolean.parseBoolean(PropertyReader.getProperty("api"))) {
         } else {
 //      getting test case ID
@@ -66,7 +64,8 @@ public class Hooks {
             ));
             capabilities.setCapability("logName", "my-cool-log.log");
             capabilities.setCapability("videoScreenSize", "1920x1080");
-            capabilities.setCapability("videoName",  "my-cool-video.mp4");
+            GetDate getDate = new GetDate();
+            capabilities.setCapability("videoName",  format("%s --> %s", scenarioName, getDate.getDate()));
             Configuration.baseUrl = System.getProperty("QASE_URL", PropertyReader.getProperty("qase.url"));
 //            Configuration.browser = PropertyReader.getProperty("browser");
             Configuration.headless = Boolean.parseBoolean(PropertyReader.getProperty("headless"));
