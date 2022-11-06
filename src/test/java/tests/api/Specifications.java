@@ -18,7 +18,7 @@ public class Specifications {
                 .build();
     }
 
-    public static ResponseSpecification responseSpecStatusCode(Integer statusCode) {
+    public static ResponseSpecification responseSpecStatusCode(int statusCode) {
         return new ResponseSpecBuilder()
                 .expectStatusCode(statusCode)
                 .build();
