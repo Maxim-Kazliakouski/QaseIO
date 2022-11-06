@@ -24,9 +24,9 @@ public class ProjectsPage {
     @Step("Delete project {projectName}")
     public void deleteProjectByName(String projectName) {
         open("/projects");
-        String projectCode = $x(format("//a[text()='%s']", projectName)).getAttribute("href").substring(28);
-        open(format("/project/%s/delete", projectCode));
-        $x("//button[contains(text(),'Delete project')]").click();
+        $x(format("//a[text()='%s']//following::a[@class='btn btn-dropdown']", projectName)).click();
+        $x(format("//a[text()='%s']//following::div//button[text()='Delete']", projectName)).click();
+        $x("//button/span[text()='Delete project']").click();
     }
 
     public void changeProject(String projectName, String whatChange, String changeValue) {
@@ -37,18 +37,18 @@ public class ProjectsPage {
         if (whatChange.equals("Project name")) {
             new Input("Project name").clear();
             new Input("Project name").input(changeValue);
-            $(By.id("update")).click();
+            $x("//span[contains(text(),'Update settings')]//ancestor::button").click();
         } else if (whatChange.equals("Project code")) {
             new Input("Project Code").clear();
             new Input("Project Code").input(changeValue);
-            $(By.id("update")).click();
+            $x("//span[contains(text(),'Update settings')]//ancestor::button").click();
         } else if (whatChange.equals("Description")) {
             new Textarea("Description").clear();
             new Textarea("Description").input(changeValue);
-            $(By.id("update")).click();
+            $x("//span[contains(text(),'Update settings')]//ancestor::button").click();
         } else if (whatChange.equals("Project access type")) {
             new RadioButton("Project access type").choose(changeValue);
-            $(By.id("update")).click();
+            $x("//span[contains(text(),'Update settings')]//ancestor::button").click();
         } else {
             throw new Error(format("Incorrect value 'whatChange'= %s", whatChange));
         }
