@@ -4,6 +4,7 @@ import adapters.ProjectAPI;
 import com.codeborne.selenide.Condition;
 import com.codeborne.selenide.Selenide;
 import dto.Project;
+import dto.factories.ProjectFactory;
 import io.cucumber.java.en.And;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
@@ -29,7 +30,7 @@ public class CreatedProjectPageSteps {
 
     @Given("Project {string} via API with params: project code: {string}, description: {string}, project access type: {string}")
     public void createdProjectViaApi(String title, String code, String desc, String accessType) {
-        Project project = new Project(title, code, desc, accessType);
+        Project project = ProjectFactory.getByAccessType(title, code, desc, accessType);
         projectAPI.createProject(project);
     }
 
