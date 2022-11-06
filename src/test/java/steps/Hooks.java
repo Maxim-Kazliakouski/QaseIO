@@ -51,7 +51,7 @@ public class Hooks {
                 caseID = eachCaseID.substring(12);
             }
             scenarioName = scenario.getName();
-            WebDriverManager.chromedriver().setup();
+//            WebDriverManager.chromedriver().setup();
             username = System.getProperty("USERNAME", PropertyReader.getProperty("qase.username"));
             password = System.getProperty("PASSWORD", PropertyReader.getProperty("qase.password"));
             DesiredCapabilities capabilities = new DesiredCapabilities();
