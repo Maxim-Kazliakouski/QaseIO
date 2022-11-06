@@ -40,7 +40,7 @@ public class ProjectsPageSteps {
 
     @Given("Create project {string} via API with params: project code: {string}, description: {string}, project access type: {string}")
     public void createdProjectViaApi(String title, String code, String desc, String accessType) {
-        Project project = new Project(title, code, desc, accessType);
+        Project project = ProjectFactory.getByAccessType(title, code, desc, accessType);
         projectAPI.createProject(project);
     }
 
