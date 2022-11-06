@@ -68,7 +68,9 @@
             <id>UI</id>
             <properties>
                 <browser></browser>
+                <browserVersion></browserVersion>
                 <headless></headless>
+                <videoTestRecord></videoTestRecord>
                 <qase.username></qase.username>
                 <qase.password></qase.password>
                 <token></token>
