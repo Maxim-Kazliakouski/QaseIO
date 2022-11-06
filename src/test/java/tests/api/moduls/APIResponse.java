@@ -1,4 +1,4 @@
-package tests.api;
+package tests.api.moduls;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.*;
