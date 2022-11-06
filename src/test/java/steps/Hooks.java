@@ -55,7 +55,7 @@ public class Hooks {
             capabilities.setCapability("browserVersion", PropertyReader.getProperty("browserVersion"));
             capabilities.setCapability("selenoid:options", Map.<String, Object>of(
                     "enableVNC", true,
-                    "enableVideo", true,
+                    "enableVideo", false,
                     "enableLog", true
             ));
             capabilities.setCapability("logName", "my-cool-log.log");
