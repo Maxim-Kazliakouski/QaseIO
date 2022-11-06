@@ -14,5 +14,5 @@ import lombok.NoArgsConstructor;
 public class Entity {
     public String title;
     public String code;
-    public Counts counts;
+    public Integer id;
 }
