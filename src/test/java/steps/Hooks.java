@@ -4,6 +4,7 @@ import adapters.ProjectAPI;
 import com.codeborne.selenide.Configuration;
 import com.codeborne.selenide.logevents.SelenideLogger;
 import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import dto.Project;
 import io.cucumber.java.After;
 import io.cucumber.java.AfterAll;

@@ -4,6 +4,7 @@ import adapters.ProjectAPI;
 import com.github.javafaker.Faker;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.reflect.TypeToken;
 import dto.Project;
 import dto.TestCase;
 import dto.TestRun;
