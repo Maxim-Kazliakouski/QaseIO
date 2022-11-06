@@ -10,7 +10,6 @@ import io.cucumber.java.After;
 import io.cucumber.java.AfterAll;
 import io.cucumber.java.Before;
 import io.cucumber.java.Scenario;
-import io.github.bonigarcia.wdm.WebDriverManager;
 import io.qameta.allure.selenide.AllureSelenide;
 import io.restassured.response.Response;
 import lombok.extern.log4j.Log4j2;
@@ -19,11 +18,8 @@ import org.testng.annotations.Listeners;
 import tests.api.moduls.APIResponse;
 import tests.api.moduls.Project.Entity;
 import tests.base.TestListener;
-import utils.GetDate;
 import utils.PropertyReader;
 
-import java.net.MalformedURLException;
-import java.net.URISyntaxException;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
@@ -52,7 +48,6 @@ public class Hooks {
             }
             scenarioName = scenario.getName();
 //            WebDriverManager.chromedriver().setup();
-//            WebDriverManager.firefoxdriver().setup();
             username = System.getProperty("USERNAME", PropertyReader.getProperty("qase.username"));
             password = System.getProperty("PASSWORD", PropertyReader.getProperty("qase.password"));
             DesiredCapabilities capabilities = new DesiredCapabilities();
