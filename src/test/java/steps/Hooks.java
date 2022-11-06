@@ -14,6 +14,7 @@ import io.github.bonigarcia.wdm.WebDriverManager;
 import io.qameta.allure.selenide.AllureSelenide;
 import io.restassured.response.Response;
 import lombok.extern.log4j.Log4j2;
+import org.openqa.selenium.Dimension;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.remote.DesiredCapabilities;
 import org.openqa.selenium.remote.RemoteWebDriver;
@@ -60,8 +61,12 @@ public class Hooks {
             capabilities.setCapability("browserVersion", PropertyReader.getProperty("browserVersion"));
             capabilities.setCapability("selenoid:options", Map.<String, Object>of(
                     "enableVNC", true,
-                    "enableVideo", true
+                    "enableVideo", true,
+                    "enableLog", true
             ));
+            capabilities.setCapability("logName", "my-cool-log.log");
+            capabilities.setCapability("videoScreenSize", "1920x1080");
+            capabilities.setCapability("videoName",  "my-cool-video.mp4");
             Configuration.baseUrl = System.getProperty("QASE_URL", PropertyReader.getProperty("qase.url"));
 //            Configuration.browser = PropertyReader.getProperty("browser");
             Configuration.headless = Boolean.parseBoolean(PropertyReader.getProperty("headless"));
@@ -71,7 +76,8 @@ public class Hooks {
             Configuration.remote = "http://localhost:4444/wd/hub";
             Configuration.browserCapabilities = capabilities;
             open();
-            getWebDriver().manage().window().maximize();
+//            getWebDriver().manage().window().maximize();
+            getWebDriver().manage().window().setSize(new Dimension(1920, 1080));
         }
     }
 
