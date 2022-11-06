@@ -65,7 +65,7 @@ public class Hooks {
             capabilities.setCapability("logName", "my-cool-log.log");
             capabilities.setCapability("videoScreenSize", "1920x1080");
             GetDate getDate = new GetDate();
-            capabilities.setCapability("videoName",  format("%s-->%s.mp4", scenarioName, getDate.getDate()));
+            capabilities.setCapability("videoName", format("%s.mp4", scenarioName));
             Configuration.baseUrl = System.getProperty("QASE_URL", PropertyReader.getProperty("qase.url"));
 //            Configuration.browser = PropertyReader.getProperty("browser");
             Configuration.headless = Boolean.parseBoolean(PropertyReader.getProperty("headless"));
