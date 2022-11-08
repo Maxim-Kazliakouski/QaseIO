@@ -10,7 +10,7 @@ import tests.api.moduls.APIResponse;
 
 @Log4j2
 public class TestRunsChecker {
-    public void isTestRunCreated(){
+    public void isTestRunCreated() {
         boolean isTestRun = Boolean.parseBoolean(PropertyReader.getProperty("testRun"));
         boolean isAPI = Boolean.parseBoolean(PropertyReader.getProperty("api"));
         if (!isAPI && isTestRun) {
@@ -29,9 +29,6 @@ public class TestRunsChecker {
                 System.out.println("There is no created test runs");
                 log.info("Test run hasn't been created yet!");
             }
-        }
-        else {
-            System.out.println("There is no reason to create new test run");
         }
     }
 }
