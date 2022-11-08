@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd">
+<suite name="Chrome-UI Qase Tests" parallel="false" thread-count="2">
+    <listeners>
+        <listener class-name="tests.base.AnnotationTransformer"/>
+        <listener class-name="tests.base.TestListener"/>
+    </listeners>
+    <test name="Chrome: tests">
+        <classes>
+            <class name="tests.FeatureLauncherTest"/>
+        </classes>
+    </test>
+</suite>
